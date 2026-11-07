@@ -1,0 +1,168 @@
+<div class="container">
+  <h3 class="title">Udfyld RACI-matrixen</h3>
+  <p class="desc">Træk bogstaverne over i de stiplede felter, eller klik på et bogstav og derefter på et tomt felt.</p>
+  <div class="palette">
+    <div class="badge item-R" draggable="true" data-role="R">R</div>
+    <div class="badge item-A" draggable="true" data-role="A">A</div>
+    <div class="badge item-C" draggable="true" data-role="C">C</div>
+    <div class="badge item-I" draggable="true" data-role="I">I</div>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Opgave / Fase</th>
+        <th>Projektleder</th>
+        <th>Produktejer (PO)</th>
+        <th>Udvikler</th>
+        <th>Designer</th>
+        <th>Kunde</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1. Kravindsamling</td>
+        <td>A</td>
+        <td><div class="drop-zone" data-target="R"></div></td>
+        <td>C</td>
+        <td>C</td>
+        <td>I</td>
+      </tr>
+      <tr>
+        <td>2. Design & Arkitektur</td>
+        <td>I</td>
+        <td>A</td>
+        <td>C</td>
+        <td><div class="drop-zone" data-target="R"></div></td>
+        <td>I</td>
+      </tr>
+      <tr>
+        <td>3. Udvikling</td>
+        <td>I</td>
+        <td>A</td>
+        <td><div class="drop-zone" data-target="R"></div></td>
+        <td>C</td>
+        <td>I</td>
+      </tr>
+      <tr>
+        <td>4. Test & QA</td>
+        <td><div class="drop-zone" data-target="A"></div></td>
+        <td>C</td>
+        <td>R</td>
+        <td>R</td>
+        <td>I</td>
+      </tr>
+      <tr>
+        <td>5. Endelig Godkendelse</td>
+        <td>R</td>
+        <td>A</td>
+        <td>I</td>
+        <td>I</td>
+        <td><div class="drop-zone" data-target="C"></div></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="btn-wrap">
+    <button class="btn" id="chk">Tjek Svar</button>
+  </div>
+  <div id="fb" class="feedback"></div>
+</div>
+
+<style>
+  body { font-family: sans-serif; margin: 10px; background: #fff; }
+  .container { max-width: 800px; margin: 0 auto; padding: 15px; border: 1px solid #e2e8f0; border-radius: 8px; background: #f8fafc; box-sizing: border-box; }
+  .title { color: #990000; text-align: center; margin-top: 0; }
+  .desc { text-align: center; color: #555; font-size: 14px; margin-bottom: 15px; }
+  .palette { display: flex; justify-content: center; gap: 15px; background: #fff; padding: 12px; border-radius: 6px; border: 1px solid #cbd5e1; margin-bottom: 15px; }
+  .badge { width: 40px; height: 40px; border-radius: 50%; color: #fff; font-weight: bold; font-size: 18px; display: flex; align-items: center; justify-content: center; cursor: grab; user-select: none; box-shadow: 0 2px 4px rgba(0,0,0,0.15); }
+  .badge:active { cursor: grabbing; }
+  .badge.selected { outline: 3px solid #22c55e; transform: scale(1.1); }
+  .item-R { background: #dc2626; }
+  .item-A { background: #2563eb; }
+  .item-C { background: #d97706; }
+  .item-I { background: #16a34a; }
+  table { width: 100%; border-collapse: collapse; background: #fff; font-size: 14px; }
+  th, td { border: 1px solid #e2e8f0; padding: 10px; text-align: center; }
+  th { background: #990000; color: #fff; }
+  td:first-child { text-align: left; font-weight: bold; color: #333; }
+  .drop-zone { width: 40px; height: 40px; border: 2px dashed #94a3b8; border-radius: 6px; margin: 0 auto; display: flex; align-items: center; justify-content: center; background: #f1f5f9; cursor: pointer; }
+  .drop-zone.drag-over { background: #cbd5e1; }
+  .drop-zone.correct { border-color: #16a34a; background: #dcfce7; }
+  .drop-zone.incorrect { border-color: #dc2626; background: #fee2e2; }
+  .btn-wrap { text-align: center; margin-top: 15px; }
+  .btn { background: #990000; color: #fff; border: none; padding: 10px 20px; font-size: 15px; font-weight: bold; border-radius: 6px; cursor: pointer; }
+  .btn:hover { background: #7a0000; }
+  .feedback { text-align: center; margin-top: 10px; font-weight: bold; }
+</style>
+
+<script>
+  let sel = null;
+  const items = document.querySelectorAll('.badge');
+  const zones = document.querySelectorAll('.drop-zone');
+  const fb = document.getElementById('fb');
+  const chk = document.getElementById('chk');
+
+  items.forEach(i => {
+    i.ondragstart = e => e.dataTransfer.setData('text/plain', i.dataset.role);
+    i.onclick = () => {
+      items.forEach(x => x.classList.remove('selected'));
+      if (sel === i.dataset.role) {
+        sel = null;
+      } else {
+        sel = i.dataset.role;
+        i.classList.add('selected');
+      }
+    };
+  });
+
+  zones.forEach(z => {
+    z.ondragover = e => { e.preventDefault(); z.classList.add('drag-over'); };
+    z.ondragleave = () => z.classList.remove('drag-over');
+    z.ondrop = e => {
+      e.preventDefault();
+      z.classList.remove('drag-over');
+      put(z, e.dataTransfer.getData('text/plain'));
+    };
+    z.onclick = () => {
+      if (sel) {
+        put(z, sel);
+        items.forEach(x => x.classList.remove('selected'));
+        sel = null;
+      } else if (z.children.length) {
+        z.innerHTML = '';
+        z.className = 'drop-zone';
+      }
+    };
+  });
+
+  function put(z, r) {
+    z.innerHTML = `<div class="badge item-${r}" style="width:32px;height:32px;font-size:14px">${r}</div>`;
+    z.className = 'drop-zone';
+  }
+
+  chk.onclick = () => {
+    let c = 0, f = 0;
+    zones.zones = zones.forEach(z => {
+      const el = z.querySelector('.badge');
+      z.classList.remove('correct', 'incorrect');
+      if (el) {
+        f++;
+        if (el.textContent.trim() === z.dataset.target) {
+          z.classList.add('correct');
+          c++;
+        } else {
+          z.classList.add('incorrect');
+        }
+      }
+    });
+    if (f < zones.length) {
+      fb.style.color = '#d97706';
+      fb.textContent = `Udfyld venligst alle ${zones.length} felter.`;
+    } else if (c === zones.length) {
+      fb.style.color = '#16a34a';
+      fb.textContent = 'Flot! Alle felter er rigtige 🎉';
+    } else {
+      fb.style.color = '#dc2626';
+      fb.textContent = `Du har ${c} af ${zones.length} rigtige. Prøv igen!`;
+    }
+  };
+</script>
