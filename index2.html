@@ -1,0 +1,325 @@
+<div id="raci-app-wrapper">
+<style>
+  #raci-app-wrapper {
+    font-family: Arial, sans-serif;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 15px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    box-sizing: border-box;
+  }
+  #raci-app-wrapper * {
+    box-sizing: border-box;
+  }
+  #raci-app-wrapper .raci-title {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 5px;
+    margin-top: 0;
+  }
+  #raci-app-wrapper .raci-desc {
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+  #raci-app-wrapper .raci-palette-box {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  #raci-app-wrapper .raci-palette-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #495057;
+  }
+  #raci-app-wrapper .palette-items {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  #raci-app-wrapper .drag-item {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+    user-select: none;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+  #raci-app-wrapper .drag-item:active {
+    cursor: grabbing;
+    transform: scale(1.05);
+  }
+  #raci-app-wrapper .drag-item.selected {
+    outline: 3px solid #22c55e;
+    transform: scale(1.1);
+  }
+  #raci-app-wrapper .item-R { background-color: #ef4444; }
+  #raci-app-wrapper .item-A { background-color: #3b82f6; }
+  #raci-app-wrapper .item-C { background-color: #eab308; }
+  #raci-app-wrapper .item-I { background-color: #22c55e; }
+
+  #raci-app-wrapper .table-responsive {
+    overflow-x: auto;
+  }
+  #raci-app-wrapper .raci-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 14px;
+  }
+  #raci-app-wrapper .raci-table th, #raci-app-wrapper .raci-table td {
+    border: 1px solid #dee2e6;
+    padding: 10px;
+    text-align: center;
+  }
+  #raci-app-wrapper .raci-table th {
+    background-color: #f1f5f9;
+    color: #334155;
+  }
+  #raci-app-wrapper .raci-table td:first-child {
+    text-align: left;
+    font-weight: 500;
+    color: #1e293b;
+  }
+  #raci-app-wrapper .drop-zone {
+    width: 44px;
+    height: 44px;
+    border: 2px dashed #cbd5e1;
+    border-radius: 6px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8fafc;
+    transition: background-color 0.2s, border-color 0.2s;
+    cursor: pointer;
+  }
+  #raci-app-wrapper .drop-zone.drag-over {
+    background-color: #e2e8f0;
+    border-color: #64748b;
+  }
+  #raci-app-wrapper .drop-zone.correct {
+    border-color: #22c55e;
+    background-color: #22c55e1a;
+  }
+  #raci-app-wrapper .drop-zone.incorrect {
+    border-color: #ef4444;
+    background-color: #ef44441a;
+  }
+  
+  #raci-app-wrapper .btn-container {
+    text-align: center;
+    margin-top: 15px;
+  }
+  #raci-app-wrapper .raci-btn {
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    font-size: 15px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  #raci-app-wrapper .raci-btn:hover {
+    background-color: #1d4ed8;
+  }
+  #raci-app-wrapper .raci-feedback {
+    margin-top: 15px;
+    font-weight: bold;
+    text-align: center;
+    font-size: 15px;
+  }
+</style>
+
+  <h3 class="raci-title">Udfyld RACI-matrixen</h3>
+  <p class="raci-desc">Træk bogstaverne over i de stiplede felter, eller klik på et bogstav og derefter på et tomt felt.</p>
+
+  <!-- Palette med svarmuligheder -->
+  <div class="raci-palette-box">
+    <div class="raci-palette-title">Brikker (R = Ansvarlig, A = Ejer, C = Konsulteret, I = Informeret):</div>
+    <div class="palette-items">
+      <div class="drag-item item-R" draggable="true" data-role="R">R</div>
+      <div class="drag-item item-A" draggable="true" data-role="A">A</div>
+      <div class="drag-item item-C" draggable="true" data-role="C">C</div>
+      <div class="drag-item item-I" draggable="true" data-role="I">I</div>
+    </div>
+  </div>
+
+  <!-- RACI Matrix Tabel -->
+  <div class="table-responsive">
+    <table class="raci-table">
+      <thead>
+        <tr>
+          <th>Opgave / Fase</th>
+          <th>Projektleder</th>
+          <th>Produktejer (PO)</th>
+          <th>Udvikler</th>
+          <th>Designer</th>
+          <th>Kunde</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1. Kravindsamling</td>
+          <td>A</td>
+          <td><div class="drop-zone" data-target="R"></div></td>
+          <td>C</td>
+          <td>C</td>
+          <td>I</td>
+        </tr>
+        <tr>
+          <td>2. Design & Arkitektur</td>
+          <td>I</td>
+          <td>A</td>
+          <td>C</td>
+          <td><div class="drop-zone" data-target="R"></div></td>
+          <td>I</td>
+        </tr>
+        <tr>
+          <td>3. Udvikling</td>
+          <td>I</td>
+          <td>A</td>
+          <td><div class="drop-zone" data-target="R"></div></td>
+          <td>C</td>
+          <td>I</td>
+        </tr>
+        <tr>
+          <td>4. Test & QA</td>
+          <td><div class="drop-zone" data-target="A"></div></td>
+          <td>C</td>
+          <td>R</td>
+          <td>R</td>
+          <td>I</td>
+        </tr>
+        <tr>
+          <td>5. Endelig Godkendelse</td>
+          <td>R</td>
+          <td>A</td>
+          <td>I</td>
+          <td>I</td>
+          <td><div class="drop-zone" data-target="C"></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="btn-container">
+    <button class="raci-btn" id="raci-check-btn">Tjek Svar</button>
+  </div>
+  <div id="raci-feedback" class="raci-feedback"></div>
+</div>
+
+<script>
+  (function() {
+    let selectedRole = null;
+
+    const wrapper = document.getElementById('raci-app-wrapper');
+    if (!wrapper) return;
+
+    const dragItems = wrapper.querySelectorAll('.drag-item');
+    const zones = wrapper.querySelectorAll('.drop-zone');
+    const feedback = wrapper.getElementById('raci-feedback');
+    const checkBtn = wrapper.getElementById('raci-check-btn');
+
+    dragItems.forEach(item => {
+      item.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text/plain', item.dataset.role);
+      });
+
+      item.addEventListener('click', () => {
+        dragItems.forEach(i => i.classList.remove('selected'));
+        if (selectedRole === item.dataset.role) {
+          selectedRole = null;
+        } else {
+          selectedRole = item.dataset.role;
+          item.classList.add('selected');
+        }
+      });
+    });
+
+    zones.forEach(zone => {
+      zone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        zone.classList.add('drag-over');
+      });
+
+      zone.addEventListener('dragleave', () => {
+        zone.classList.remove('drag-over');
+      });
+
+      zone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        zone.classList.remove('drag-over');
+        const role = e.dataTransfer.getData('text/plain');
+        placeRole(zone, role);
+      });
+
+      zone.addEventListener('click', () => {
+        if (selectedRole) {
+          placeRole(zone, selectedRole);
+          dragItems.forEach(i => i.classList.remove('selected'));
+          selectedRole = null;
+        } else if (zone.children.length > 0) {
+          zone.innerHTML = '';
+          zone.classList.remove('correct', 'incorrect');
+        }
+      });
+    });
+
+    function placeRole(zone, role) {
+      zone.innerHTML = `<div class="drag-item item-${role}" style="cursor:pointer; margin: 0 auto;">${role}</div>`;
+      zone.classList.remove('correct', 'incorrect');
+    }
+
+    checkBtn.addEventListener('click', () => {
+      let correctCount = 0;
+      let filledCount = 0;
+
+      zones.forEach(zone => {
+        const child = zone.querySelector('.drag-item');
+        zone.classList.remove('correct', 'incorrect');
+
+        if (child) {
+          filledCount++;
+          const placedRole = child.textContent.trim();
+          const expectedRole = zone.dataset.target;
+
+          if (placedRole === expectedRole) {
+            zone.classList.add('correct');
+            correctCount++;
+          } else {
+            zone.classList.add('incorrect');
+          }
+        }
+      });
+
+      if (filledCount < zones.length) {
+        feedback.style.color = '#eab308';
+        feedback.textContent = `Udfyld venligst alle ${zones.length} felter før du tjekker.`;
+      } else if (correctCount === zones.length) {
+        feedback.style.color = '#22c55e';
+        feedback.textContent = 'Flot klaret! Alle felter er placeret korrekt 🎉';
+      } else {
+        feedback.style.color = '#ef4444';
+        feedback.textContent = `Du har ${correctCount} af ${zones.length} rigtige. Prøv igen!`;
+      }
+    });
+  })();
+</script>
