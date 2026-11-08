@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Start af et projekt - RACI</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; margin: 0; padding: 15px; background: #f8fafc; color: #1e293b; }
+    .container { max-width: 1100px; margin: 0 auto; background: #fff; padding: 20px; border-radius: 10px; border: 1px solid #cbd5e1; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+    h2 { color: #990000; text-align: center; margin-top: 0; margin-bottom: 5px; }
+    p.instructions { text-align: center; font-size: 14px; color: #64748b; margin-bottom: 20px; }
+    .palette { display: flex; justify-content: center; gap: 20px; background: #f1f5f9; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 20px; }
+    .badge { width: 40px; height: 40px; border-radius: 50%; color: #fff; font-weight: bold; font-size: 16px; display: flex; align-items: center; justify-content: center; cursor: grab; user-select: none; box-shadow: 0 2px 4px rgba(0,0,0,0.15); transition: transform 0.1s; }
+    .badge:active { cursor: grabbing; }
+    .badge.selected { outline: 3px solid #16a34a; transform: scale(1.15); }
+    .item-R { background-color: #dc2626; } .item-A { background-color: #2563eb; } .item-C { background-color: #d97706; } .item-I { background-color: #16a34a; }
+    .table-wrapper { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; background: #fff; }
+    th, td { border: 1px solid #cbd5e1; padding: 8px; text-align: center; }
+    th { background: #990000; color: #fff; font-weight: 600; white-space: nowrap; }
+    td:first-child { text-align: left; font-weight: 600; background: #f8fafc; min-width: 180px; }
+    .drop-zone { width: 32px; height: 32px; border: 2px dashed #94a3b8; border-radius: 6px; margin: 0 auto; display: flex; align-items: center; justify-content: center; background: #fff; cursor: pointer; transition: background 0.15s; }
+    .drop-zone.drag-over { background: #e2e8f0; border-color: #475569; }
+    .drop-zone.correct { border-color: #16a34a; background: #dcfce7; }
+    .drop-zone.incorrect { border-color: #dc2626; background: #fee2e2; }
+    .static-val { font-weight: bold; font-size: 13px; }
+    .actions { text-align: center; margin-top: 20px; }
+    .btn { background: #990000; color: #fff; border: none; padding: 12px 28px; font-size: 15px; font-weight: bold; border-radius: 6px; cursor: pointer; transition: background 0.2s; }
+    .btn:hover { background: #7a0000; }
+    .feedback { text-align: center; margin-top: 15px; font-weight: bold; font-size: 15px; min-height: 22px; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h2>Tabel 13.2: RACI-matrix til start af et projekt</h2>
+  <p class="instructions">Træk bogstaverne (R, A, C, I) hen i de stiplede felter, eller klik på et bogstav og derefter på feltet.</p>
+  <div class="palette">
+    <div class="badge item-R" draggable="true" data-role="R">R</div>
+    <div class="badge item-A" draggable="true" data-role="A">A</div>
+    <div class="badge item-C" draggable="true" data-role="C">C</div>
+    <div class="badge item-I" draggable="true" data-role="I">I</div>
+  </div>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Aktivitet</th><th>Forretningslag</th><th>Styringsgruppeforperson</th><th>Seniorbruger</th><th>Seniorleverandør</th><th>Projektleder</th><th>Teamleder</th><th>Projektsikring</th><th>Projektsupport</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Udnævne styringsgruppeforpersonen og projektlederen[cite: 1]</td>
+          <td><span class="static-val">A/R</span>[cite: 1]</td><td><span class="static-val">R</span>[cite: 1]</td><td><span class="static-val">-</span></td><td><span class="static-val">-</span></td><td><span class="static-val">-</span></td><td><span class="static-val">-</span></td><td><span class="static-val">-</span></td><td><span class="static-val">-</span></td>
+        </tr>
+        <tr>
+          <td>Vurdere tidligere erfaringer[cite: 1]</td>
+          <td><div class="drop-zone" data-ans="C"></div></td><td><span class="static-val">A</span>[cite: 1]</td><td><span class="static-val">-</span></td><td><span class="static-val">-</span></td><td><div class="drop-zone" data-ans="R"></div></td><td><span class="static-val">-</span></td><td><span class="static-val">-</span></td><td><span class="static-val">-</span></td>
+        </tr>
+        <tr>
+          <td>Udarbejde udkast til business case[cite: 1]</td>
+          <td><div class="drop-zone" data-ans="C"></div></td><td><span class="static-val">A/R</span>[cite: 1]</td><td><div class="drop-zone" data-ans="C"></div></td><td><div class="drop-zone" data-ans="C"></div></td><td><span class="static-val">R</span>[cite: 1]</td><td><span class="static-val">-</span></td><td><span class="static-val">-</span></td><td><span class="static-val">-</span></td>
+        </tr>
+        <tr>
+          <td>Udnævne projektorganisationen[cite: 1]</td>
+          <td><div class="drop-zone" data-ans="A"></div></td><td><span class="static-val">R</span>[cite: 1]</td><td><span class="static-val">-</span></td><td><span class="static-val">-</span></td><td><span class="static-val">-</span></td><td><span class="static-val">-</span></td><td><span class="static-val">-</span></td><td><span class="static-val">-</span></td>
+        </tr>
+        <tr>
+          <td>Vælge projektfremgangsmåden[cite: 1]</td>
+          <td><span class="static-val">-</span></td><td><span class="static-val">A</span>[cite: 1]</td><td><div class="drop-zone" data-ans="C"></div></td><td><div class="drop-zone" data-ans="C"></div></td><td><span class="static-val">R</span>[cite: 1]</td><td><div class="drop-zone" data-ans="C"></div></td><td><div class="drop-zone" data-ans="C"></div></td><td><span class="static-val">-</span></td>
+        </tr>
+        <tr>
+          <td>Sammensætte projektgrundlaget[cite: 1]</td>
+          <td><span class="static-val">-</span></td><td><span class="static-val">A</span>[cite: 1]</td><td><div class="drop-zone" data-ans="C"></div></td><td><div class="drop-zone" data-ans="C"></div></td><td><span class="static-val">R</span>[cite: 1]</td><td><span class="static-val">-</span></td><td><div class="drop-zone" data-ans="C"></div></td><td><div class="drop-zone" data-ans="C"></div></td>
+        </tr>
+        <tr>
+          <td>Planlægge initieringsfasen[cite: 1]</td>
+          <td><span class="static-val">-</span></td><td><span class="static-val">A</span>[cite: 1]</td><td><div class="drop-zone" data-ans="C"></div></td><td><div class="drop-zone" data-ans="C"></div></td><td><span class="static-val">R</span>[cite: 1]</td><td><div class="drop-zone" data-ans="R"></div></td><td><div class="drop-zone" data-ans="C"></div></td><td><div class="drop-zone" data-ans="C"></div></td>
+        </tr>
+        <tr>
+          <td>Anmode om projektinitiering[cite: 1]</td>
+          <td><span class="static-val">-</span></td><td><span class="static-val">A</span>[cite: 1]</td><td><div class="drop-zone" data-ans="C"></div></td><td><span class="static-val">-</span></td><td><span class="static-val">R</span>[cite: 1]</td><td><div class="drop-zone" data-ans="I"></div></td><td><div class="drop-zone" data-ans="C"></div></td><td><span class="static-val">I</span>[cite: 1]</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="actions"><button class="btn" id="check-btn">Tjek Svar</button></div>
+  <div class="feedback" id="feedback"></div>
+</div>
+<script>
+  let selectedRole = null;
+  const badges = document.querySelectorAll('.badge');
+  const zones = document.querySelectorAll('.drop-zone');
+  const feedback = document.getElementById('feedback');
+  const checkBtn = document.getElementById('check-btn');
+  badges.forEach(b => {
+    b.addEventListener('dragstart', e => e.dataTransfer.setData('text/plain', b.dataset.role));
+    b.addEventListener('click', () => {
+      badges.forEach(x => x.classList.remove('selected'));
+      selectedRole = (selectedRole === b.dataset.role) ? null : b.dataset.role;
+      if(selectedRole) b.classList.add('selected');
+    });
+  });
+  zones.forEach(z => {
+    z.addEventListener('dragover', e => { e.preventDefault(); z.classList.add('drag-over'); });
+    z.addEventListener('dragleave', () => z.classList.remove('drag-over'));
+    z.addEventListener('drop', e => {
+      e.preventDefault(); z.classList.remove('drag-over');
+      const r = e.dataTransfer.getData('text/plain');
+      if(r) place(z, r);
+    });
+    z.addEventListener('click', () => {
+      if(selectedRole) { place(z, selectedRole); badges.forEach(x => x.classList.remove('selected')); selectedRole = null; }
+      else if(z.children.length > 0) { z.innerHTML = ''; delete z.dataset.placed; z.className = 'drop-zone'; }
+    });
+  });
+  function place(z, r) {
+    z.innerHTML = `<div class="badge item-${r}" style="width:26px;height:26px;font-size:12px;cursor:pointer;">${r}</div>`;
+    z.dataset.placed = r; z.className = 'drop-zone';
+  }
+  checkBtn.addEventListener('click', () => {
+    let corr = 0, filled = 0, total = zones.length;
+    zones.forEach(z => {
+      z.classList.remove('correct', 'incorrect');
+      const p = z.dataset.placed, a = z.dataset.ans;
+      if(p) { filled++; if(p === a) { z.classList.add('correct'); corr++; } else { z.classList.add('incorrect'); } }
+    });
+    if(filled < total) { feedback.style.color = '#d97706'; feedback.textContent = `Udfyld venligst alle ${total} felter før tjek.`; }
+    else if(corr === total) { feedback.style.color = '#16a34a'; feedback.textContent = `Perfekt! Alle svar er helt korrekte 🎉`; }
+    else { feedback.style.color = '#dc2626'; feedback.textContent = `Du har ${corr} ud af ${total} rigtige. Ret de røde felter!`; }
+  });
+</script>
+</body>
+</html>
